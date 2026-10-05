@@ -3,7 +3,7 @@
     "@sendgrid/mail": "^8.1.4",
     "firebase": "^10.14.1"
   },
-  "name": "pustezug_games_website",
+  "name": "julianschulz.eu",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
