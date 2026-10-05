@@ -277,3 +277,5 @@ footer { margin-top: 56px; padding-top: 20px; padding-bottom: 40px; border-top: 
     .grid { grid-template-columns: 1fr; }
     .site-nav { gap: 16px; font-size: 12px; }
 }
+.crest .euflag { transform-box: fill-box; transform-origin: left center; animation: flap 3s ease-in-out infinite; }
+@keyframes flap { 0%, 100% { transform: skewY(0) scaleX(1); } 50% { transform: skewY(4deg) scaleX(.93); } }
