@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move the North Pole – Julian Schulz</title>
+    <meta name="description" content="A world map where you decide where the North Pole is.">
+    <link rel="canonical" href="https://www.julianschulz.eu/map">
+    <link rel="stylesheet" href="style.css">
+    <script src="java_scripts/theme.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="icon_folder/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon_folder/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icon_folder/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon_folder/favicon-16x16.png">
+    <script type="module" src="java_scripts/map.js"></script>
+    <style>
+        main, .site-nav, footer { max-width: 1280px; }
+        .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding: 14px 0; font-size: 13px; }
+        .choice { display: flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+        .controls button { padding: 5px 12px; border: 0; background: none; color: var(--muted); font: 500 13px 'Inter', sans-serif; cursor: pointer; }
+        .controls button:hover { color: var(--accent); }
+        .controls button.active { background: var(--ink); color: var(--paper); }
+        .reset { border: 1px solid var(--line) !important; border-radius: 4px; }
+        .readout { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+        .map { display: grid; justify-content: center; }
+        .map canvas { grid-area: 1 / 1; cursor: crosshair; }
+        footer { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="index.html">Julian Schulz</a>
+        <span>Click the map to move the North Pole</span>
+        <button class="theme-toggle" aria-label="Switch day and night"></button>
+    </nav>
+
+    <main>
+        <div class="controls">
+            <div class="choice" data-set="style">
+                <button value="physical" class="active">Physical</button>
+                <button value="political">Political</button>
+            </div>
+            <div class="choice" data-set="projection">
+                <button value="0" class="active">Mercator</button>
+                <button value="1">Robinson</button>
+                <button value="2">Gall–Peters</button>
+                <button value="3">Polar</button>
+            </div>
+            <button class="reset">Reset</button>
+            <span class="readout"></span>
+        </div>
+        <div class="map">
+            <canvas class="relief"></canvas>
+            <canvas class="vector"></canvas>
+        </div>
+    </main>
+
+    <footer>Map data from <a href="https://www.naturalearthdata.com/">Natural Earth</a>.</footer>
+</body>
+</html>
