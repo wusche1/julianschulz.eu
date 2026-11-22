@@ -25,7 +25,10 @@
         .controls button.active { background: var(--ink); color: var(--paper); }
         .reset { border: 1px solid var(--line) !important; border-radius: 4px; }
         .readout { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
-        .map { display: grid; justify-content: center; }
+        .stage { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .map { display: grid; }
+        .spin { flex: none; width: 37px; padding: 14px 0; border: 1px solid var(--line); border-radius: 4px; background: none; color: var(--muted); font: 500 14px 'Inter', sans-serif; cursor: pointer; }
+        .spin:hover { color: var(--accent); border-color: var(--accent); }
         .map canvas { grid-area: 1 / 1; cursor: crosshair; }
         footer { margin-top: 20px; }
     </style>
@@ -52,9 +55,13 @@
             <button class="reset">Reset</button>
             <span class="readout"></span>
         </div>
-        <div class="map">
-            <canvas class="relief"></canvas>
-            <canvas class="vector"></canvas>
+        <div class="stage">
+            <button class="spin" value="-20" aria-label="Rotate west">←<br>W</button>
+            <div class="map">
+                <canvas class="relief"></canvas>
+                <canvas class="vector"></canvas>
+            </div>
+            <button class="spin" value="20" aria-label="Rotate east">→<br>E</button>
         </div>
     </main>
 

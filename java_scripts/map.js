@@ -94,7 +94,7 @@ function draw() {
 function resize() {
     projection = projections[proj];
     const [, [, height]] = geoPath(projection.fitWidth(1, sphere)).bounds(sphere);
-    const w = Math.min(wrap.clientWidth, Math.max(300, innerHeight - 150) / height) * devicePixelRatio, h = w * height;
+    const w = Math.min(wrap.parentElement.clientWidth - 90, Math.max(300, innerHeight - 150) / height) * devicePixelRatio, h = w * height;
     for (const c of [canvas, glCanvas]) {
         c.width = w;
         c.height = h;
@@ -112,24 +112,41 @@ function label() {
 }
 
 let frame;
-function animate(target) {
-    const q0 = versor(rotate), v0 = versor.cartesian(target), v1 = versor.cartesian(geoRotation(rotate).invert([0, 90]));
-    const start = performance.now(), duration = 1500 * Math.sqrt(Math.acos(Math.min(1, v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v1[2])) / Math.PI) + 200;
+function animate(at, duration) {
+    const start = performance.now();
     cancelAnimationFrame(frame);
     const step = now => {
         const t = Math.min(1, (now - start) / duration);
-        rotate = versor.rotation(versor.multiply(q0, versor.delta(v0, v1, t * t * (3 - 2 * t))));
+        rotate = versor.rotation(at(t * t * (3 - 2 * t)));
         draw();
         if (t < 1) frame = requestAnimationFrame(step); else label();
     };
     frame = requestAnimationFrame(step);
 }
 
+function movePole(target) {
+    const q0 = versor(rotate), v0 = versor.cartesian(target), v1 = versor.cartesian(geoRotation(rotate).invert([0, 90]));
+    const angle = Math.acos(Math.min(1, v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v1[2]));
+    animate(t => versor.multiply(q0, versor.delta(v0, v1, t)), 1500 * Math.sqrt(angle / Math.PI) + 200);
+}
+
+const spin = degrees => versor.multiply(versor([-degrees, 0, 0]), versor(rotate));
+
 canvas.onclick = e => {
     const point = [e.offsetX * devicePixelRatio, e.offsetY * devicePixelRatio], target = projection.invert(point), back = projection(target);
-    if (Math.hypot(back[0] - point[0], back[1] - point[1]) < 2) animate(target);
+    if (Math.hypot(back[0] - point[0], back[1] - point[1]) < 2) movePole(target);
 };
-document.querySelector('.reset').onclick = () => animate([0, 90]);
+document.querySelector('.reset').onclick = () => movePole([0, 90]);
+for (const button of document.querySelectorAll('.spin')) button.onclick = () => { const q0 = versor(rotate); animate(t => versor.multiply(versor([-button.value * t, 0, 0]), q0), 400); };
+addEventListener('keydown', e => {
+    const direction = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
+    if (!direction) return;
+    e.preventDefault();
+    cancelAnimationFrame(frame);
+    rotate = versor.rotation(spin(4 * direction));
+    draw();
+    label();
+});
 
 for (const group of document.querySelectorAll('.choice')) group.onclick = e => {
     if (!e.target.value) return;
